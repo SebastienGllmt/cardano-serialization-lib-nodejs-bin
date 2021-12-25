@@ -515,17 +515,21 @@ module.exports.RelayKind = Object.freeze({ SingleHostAddr:0,"0":"SingleHostAddr"
 */
 module.exports.NativeScriptKind = Object.freeze({ ScriptPubkey:0,"0":"ScriptPubkey",ScriptAll:1,"1":"ScriptAll",ScriptAny:2,"2":"ScriptAny",ScriptNOfK:3,"3":"ScriptNOfK",TimelockStart:4,"4":"TimelockStart",TimelockExpiry:5,"5":"TimelockExpiry", });
 /**
+*/
+module.exports.NetworkIdKind = Object.freeze({ Testnet:0,"0":"Testnet",Mainnet:1,"1":"Mainnet", });
+/**
+*/
+module.exports.CoinSelectionStrategyCIP2 = Object.freeze({ LargestFirst:0,"0":"LargestFirst",RandomImprove:1,"1":"RandomImprove", });
+/**
 * Each new language uses a different namespace for hashing its script
 * This is because you could have a language where the same bytes have different semantics
 * So this avoids scripts in different languages mapping to the same hash
 * Note that the enum value here is different than the enum value for deciding the cost model of a script
+* https://github.com/input-output-hk/cardano-ledger/blob/9c3b4737b13b30f71529e76c5330f403165e28a6/eras/alonzo/impl/src/Cardano/Ledger/Alonzo.hs#L127
 */
-module.exports.ScriptHashNamespace = Object.freeze({ NativeScript:0,"0":"NativeScript", });
+module.exports.ScriptHashNamespace = Object.freeze({ NativeScript:0,"0":"NativeScript",PlutusV1:1,"1":"PlutusV1",PlutusV2:2,"2":"PlutusV2", });
 /**
-*/
-module.exports.NetworkIdKind = Object.freeze({ Testnet:0,"0":"Testnet",Mainnet:1,"1":"Mainnet", });
-/**
-* Used to choosed the schema for a script JSON string
+* Used to choose the schema for a script JSON string
 */
 module.exports.ScriptSchema = Object.freeze({ Wallet:0,"0":"Wallet",Node:1,"1":"Node", });
 /**
@@ -539,10 +543,7 @@ module.exports.MetadataJsonSchema = Object.freeze({ NoConversions:0,"0":"NoConve
 module.exports.StakeCredKind = Object.freeze({ Key:0,"0":"Key",Script:1,"1":"Script", });
 /**
 */
-module.exports.CoinSelectionStrategyCIP2 = Object.freeze({ LargestFirst:0,"0":"LargestFirst",RandomImprove:1,"1":"RandomImprove", });
-/**
-*/
-module.exports.LanguageKind = Object.freeze({ PlutusV1:0,"0":"PlutusV1", });
+module.exports.LanguageKind = Object.freeze({ PlutusV1:0,"0":"PlutusV1",PlutusV2:1,"1":"PlutusV2", });
 /**
 */
 module.exports.PlutusDataKind = Object.freeze({ ConstrPlutusData:0,"0":"ConstrPlutusData",Map:1,"1":"Map",List:2,"2":"List",Integer:3,"3":"Integer",Bytes:4,"4":"Bytes", });
@@ -4528,6 +4529,13 @@ class Language {
         return Language.__wrap(ret);
     }
     /**
+    * @returns {Language}
+    */
+    static new_plutus_v2() {
+        var ret = wasm.language_new_plutus_v2();
+        return Language.__wrap(ret);
+    }
+    /**
     * @returns {number}
     */
     kind() {
@@ -6437,6 +6445,14 @@ class PlutusScript {
         return PlutusScript.__wrap(ret);
     }
     /**
+    * @param {number} namespace
+    * @returns {ScriptHash}
+    */
+    hash(namespace) {
+        var ret = wasm.plutusscript_hash(this.ptr, namespace);
+        return ScriptHash.__wrap(ret);
+    }
+    /**
     * @param {Uint8Array} bytes
     * @returns {PlutusScript}
     */
@@ -8200,6 +8216,55 @@ class RedeemerTag {
 module.exports.RedeemerTag = RedeemerTag;
 /**
 */
+class RedeemerWitnessKey {
+
+    static __wrap(ptr) {
+        const obj = Object.create(RedeemerWitnessKey.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_redeemerwitnesskey_free(ptr);
+    }
+    /**
+    * @returns {RedeemerTag}
+    */
+    tag() {
+        var ret = wasm.redeemerwitnesskey_tag(this.ptr);
+        return RedeemerTag.__wrap(ret);
+    }
+    /**
+    * @returns {BigNum}
+    */
+    index() {
+        var ret = wasm.redeemerwitnesskey_index(this.ptr);
+        return BigNum.__wrap(ret);
+    }
+    /**
+    * @param {RedeemerTag} tag
+    * @param {BigNum} index
+    * @returns {RedeemerWitnessKey}
+    */
+    static new(tag, index) {
+        _assertClass(tag, RedeemerTag);
+        _assertClass(index, BigNum);
+        var ret = wasm.redeemerwitnesskey_new(tag.ptr, index.ptr);
+        return RedeemerWitnessKey.__wrap(ret);
+    }
+}
+module.exports.RedeemerWitnessKey = RedeemerWitnessKey;
+/**
+*/
 class Redeemers {
 
     static __wrap(ptr) {
@@ -8461,6 +8526,128 @@ class Relays {
     }
 }
 module.exports.Relays = Relays;
+/**
+*/
+class RequiredSignatureSet {
+
+    static __wrap(ptr) {
+        const obj = Object.create(RequiredSignatureSet.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_requiredsignatureset_free(ptr);
+    }
+    /**
+    * @param {Vkeywitness} vkey
+    */
+    add_vkey(vkey) {
+        _assertClass(vkey, Vkeywitness);
+        wasm.requiredsignatureset_add_vkey(this.ptr, vkey.ptr);
+    }
+    /**
+    * @param {Vkey} vkey
+    */
+    add_vkey_key(vkey) {
+        _assertClass(vkey, Vkey);
+        wasm.requiredsignatureset_add_vkey_key(this.ptr, vkey.ptr);
+    }
+    /**
+    * @param {BootstrapWitness} bootstrap
+    */
+    add_bootstrap(bootstrap) {
+        _assertClass(bootstrap, BootstrapWitness);
+        wasm.requiredsignatureset_add_bootstrap(this.ptr, bootstrap.ptr);
+    }
+    /**
+    * @param {Vkey} bootstrap
+    */
+    add_bootstrap_key(bootstrap) {
+        _assertClass(bootstrap, Vkey);
+        wasm.requiredsignatureset_add_bootstrap_key(this.ptr, bootstrap.ptr);
+    }
+    /**
+    * @param {NativeScript} native_script
+    */
+    add_native_script(native_script) {
+        _assertClass(native_script, NativeScript);
+        wasm.requiredsignatureset_add_native_script(this.ptr, native_script.ptr);
+    }
+    /**
+    * @param {ScriptHash} native_script
+    */
+    add_native_script_hash(native_script) {
+        _assertClass(native_script, ScriptHash);
+        wasm.requiredsignatureset_add_native_script_hash(this.ptr, native_script.ptr);
+    }
+    /**
+    * @param {PlutusScript} plutus_script
+    */
+    add_plutus_script(plutus_script) {
+        _assertClass(plutus_script, PlutusScript);
+        wasm.requiredsignatureset_add_plutus_script(this.ptr, plutus_script.ptr);
+    }
+    /**
+    * @param {ScriptHash} plutus_script
+    */
+    add_plutus_hash(plutus_script) {
+        _assertClass(plutus_script, ScriptHash);
+        wasm.requiredsignatureset_add_plutus_hash(this.ptr, plutus_script.ptr);
+    }
+    /**
+    * @param {PlutusData} plutus_datum
+    */
+    add_plutus_datum(plutus_datum) {
+        _assertClass(plutus_datum, PlutusData);
+        wasm.requiredsignatureset_add_plutus_datum(this.ptr, plutus_datum.ptr);
+    }
+    /**
+    * @param {DataHash} plutus_datum
+    */
+    add_plutus_datum_hash(plutus_datum) {
+        _assertClass(plutus_datum, DataHash);
+        wasm.requiredsignatureset_add_plutus_datum_hash(this.ptr, plutus_datum.ptr);
+    }
+    /**
+    * @param {Redeemer} redeemer
+    */
+    add_redeemer(redeemer) {
+        _assertClass(redeemer, Redeemer);
+        wasm.requiredsignatureset_add_redeemer(this.ptr, redeemer.ptr);
+    }
+    /**
+    * @param {RedeemerWitnessKey} redeemer
+    */
+    add_redeemer_tag(redeemer) {
+        _assertClass(redeemer, RedeemerWitnessKey);
+        wasm.requiredsignatureset_add_redeemer_tag(this.ptr, redeemer.ptr);
+    }
+    /**
+    * @param {RequiredSignatureSet} requirements
+    */
+    add_all(requirements) {
+        _assertClass(requirements, RequiredSignatureSet);
+        wasm.requiredsignatureset_add_all(this.ptr, requirements.ptr);
+    }
+    /**
+    * @returns {RequiredSignatureSet}
+    */
+    static new() {
+        var ret = wasm.requiredsignatureset_new();
+        return RequiredSignatureSet.__wrap(ret);
+    }
+}
+module.exports.RequiredSignatureSet = RequiredSignatureSet;
 /**
 */
 class RewardAddress {
@@ -11736,6 +11923,108 @@ class TransactionWitnessSet {
     }
 }
 module.exports.TransactionWitnessSet = TransactionWitnessSet;
+/**
+* Builder de-duplicates witnesses as they are added
+*/
+class TransactionWitnessSetBuilder {
+
+    static __wrap(ptr) {
+        const obj = Object.create(TransactionWitnessSetBuilder.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_transactionwitnesssetbuilder_free(ptr);
+    }
+    /**
+    * @param {Vkeywitness} vkey
+    */
+    add_vkey(vkey) {
+        _assertClass(vkey, Vkeywitness);
+        wasm.transactionwitnesssetbuilder_add_vkey(this.ptr, vkey.ptr);
+    }
+    /**
+    * @param {BootstrapWitness} bootstrap
+    */
+    add_bootstrap(bootstrap) {
+        _assertClass(bootstrap, BootstrapWitness);
+        wasm.transactionwitnesssetbuilder_add_bootstrap(this.ptr, bootstrap.ptr);
+    }
+    /**
+    * @param {NativeScript} native_script
+    */
+    add_native_script(native_script) {
+        _assertClass(native_script, NativeScript);
+        wasm.transactionwitnesssetbuilder_add_native_script(this.ptr, native_script.ptr);
+    }
+    /**
+    * @param {PlutusScript} plutus_script
+    */
+    add_plutus_script(plutus_script) {
+        _assertClass(plutus_script, PlutusScript);
+        wasm.transactionwitnesssetbuilder_add_plutus_script(this.ptr, plutus_script.ptr);
+    }
+    /**
+    * @param {PlutusData} plutus_datum
+    */
+    add_plutus_datum(plutus_datum) {
+        _assertClass(plutus_datum, PlutusData);
+        wasm.transactionwitnesssetbuilder_add_plutus_datum(this.ptr, plutus_datum.ptr);
+    }
+    /**
+    * @param {Redeemer} redeemer
+    */
+    add_redeemer(redeemer) {
+        _assertClass(redeemer, Redeemer);
+        wasm.transactionwitnesssetbuilder_add_redeemer(this.ptr, redeemer.ptr);
+    }
+    /**
+    * @param {RequiredSignatureSet} required_sigs
+    */
+    set_required_sigs(required_sigs) {
+        _assertClass(required_sigs, RequiredSignatureSet);
+        wasm.transactionwitnesssetbuilder_set_required_sigs(this.ptr, required_sigs.ptr);
+    }
+    /**
+    * @returns {RequiredSignatureSet}
+    */
+    get_required_sigs() {
+        var ret = wasm.transactionwitnesssetbuilder_get_required_sigs(this.ptr);
+        return RequiredSignatureSet.__wrap(ret);
+    }
+    /**
+    * @returns {TransactionWitnessSetBuilder}
+    */
+    static new() {
+        var ret = wasm.transactionwitnesssetbuilder_new();
+        return TransactionWitnessSetBuilder.__wrap(ret);
+    }
+    /**
+    * @param {TransactionWitnessSet} wit_set
+    */
+    add_existing(wit_set) {
+        _assertClass(wit_set, TransactionWitnessSet);
+        wasm.transactionwitnesssetbuilder_add_existing(this.ptr, wit_set.ptr);
+    }
+    /**
+    * @returns {TransactionWitnessSet}
+    */
+    build() {
+        var ret = wasm.transactionwitnesssetbuilder_build(this.ptr);
+        return TransactionWitnessSet.__wrap(ret);
+    }
+}
+module.exports.TransactionWitnessSetBuilder = TransactionWitnessSetBuilder;
 /**
 */
 class TransactionWitnessSets {

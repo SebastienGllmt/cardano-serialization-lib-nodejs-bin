@@ -161,22 +161,31 @@ export enum NativeScriptKind {
   TimelockExpiry,
 }
 /**
-* Each new language uses a different namespace for hashing its script
-* This is because you could have a language where the same bytes have different semantics
-* So this avoids scripts in different languages mapping to the same hash
-* Note that the enum value here is different than the enum value for deciding the cost model of a script
-*/
-export enum ScriptHashNamespace {
-  NativeScript,
-}
-/**
 */
 export enum NetworkIdKind {
   Testnet,
   Mainnet,
 }
 /**
-* Used to choosed the schema for a script JSON string
+*/
+export enum CoinSelectionStrategyCIP2 {
+  LargestFirst,
+  RandomImprove,
+}
+/**
+* Each new language uses a different namespace for hashing its script
+* This is because you could have a language where the same bytes have different semantics
+* So this avoids scripts in different languages mapping to the same hash
+* Note that the enum value here is different than the enum value for deciding the cost model of a script
+* https://github.com/input-output-hk/cardano-ledger/blob/9c3b4737b13b30f71529e76c5330f403165e28a6/eras/alonzo/impl/src/Cardano/Ledger/Alonzo.hs#L127
+*/
+export enum ScriptHashNamespace {
+  NativeScript,
+  PlutusV1,
+  PlutusV2,
+}
+/**
+* Used to choose the schema for a script JSON string
 */
 export enum ScriptSchema {
   Wallet,
@@ -206,14 +215,9 @@ export enum StakeCredKind {
 }
 /**
 */
-export enum CoinSelectionStrategyCIP2 {
-  LargestFirst,
-  RandomImprove,
-}
-/**
-*/
 export enum LanguageKind {
   PlutusV1,
+  PlutusV2,
 }
 /**
 */
@@ -1751,6 +1755,10 @@ export class Language {
 */
   static new_plutus_v1(): Language;
 /**
+* @returns {Language}
+*/
+  static new_plutus_v2(): Language;
+/**
 * @returns {number}
 */
   kind(): number;
@@ -2526,6 +2534,11 @@ export class PlutusScript {
 */
   static from_bytes(bytes: Uint8Array): PlutusScript;
 /**
+* @param {number} namespace
+* @returns {ScriptHash}
+*/
+  hash(namespace: number): ScriptHash;
+/**
 * @param {Uint8Array} bytes
 * @returns {PlutusScript}
 */
@@ -3262,6 +3275,25 @@ export class RedeemerTag {
 }
 /**
 */
+export class RedeemerWitnessKey {
+  free(): void;
+/**
+* @returns {RedeemerTag}
+*/
+  tag(): RedeemerTag;
+/**
+* @returns {BigNum}
+*/
+  index(): BigNum;
+/**
+* @param {RedeemerTag} tag
+* @param {BigNum} index
+* @returns {RedeemerWitnessKey}
+*/
+  static new(tag: RedeemerTag, index: BigNum): RedeemerWitnessKey;
+}
+/**
+*/
 export class Redeemers {
   free(): void;
 /**
@@ -3366,6 +3398,67 @@ export class Relays {
 * @param {Relay} elem
 */
   add(elem: Relay): void;
+}
+/**
+*/
+export class RequiredSignatureSet {
+  free(): void;
+/**
+* @param {Vkeywitness} vkey
+*/
+  add_vkey(vkey: Vkeywitness): void;
+/**
+* @param {Vkey} vkey
+*/
+  add_vkey_key(vkey: Vkey): void;
+/**
+* @param {BootstrapWitness} bootstrap
+*/
+  add_bootstrap(bootstrap: BootstrapWitness): void;
+/**
+* @param {Vkey} bootstrap
+*/
+  add_bootstrap_key(bootstrap: Vkey): void;
+/**
+* @param {NativeScript} native_script
+*/
+  add_native_script(native_script: NativeScript): void;
+/**
+* @param {ScriptHash} native_script
+*/
+  add_native_script_hash(native_script: ScriptHash): void;
+/**
+* @param {PlutusScript} plutus_script
+*/
+  add_plutus_script(plutus_script: PlutusScript): void;
+/**
+* @param {ScriptHash} plutus_script
+*/
+  add_plutus_hash(plutus_script: ScriptHash): void;
+/**
+* @param {PlutusData} plutus_datum
+*/
+  add_plutus_datum(plutus_datum: PlutusData): void;
+/**
+* @param {DataHash} plutus_datum
+*/
+  add_plutus_datum_hash(plutus_datum: DataHash): void;
+/**
+* @param {Redeemer} redeemer
+*/
+  add_redeemer(redeemer: Redeemer): void;
+/**
+* @param {RedeemerWitnessKey} redeemer
+*/
+  add_redeemer_tag(redeemer: RedeemerWitnessKey): void;
+/**
+* @param {RequiredSignatureSet} requirements
+*/
+  add_all(requirements: RequiredSignatureSet): void;
+/**
+* @returns {RequiredSignatureSet}
+*/
+  static new(): RequiredSignatureSet;
 }
 /**
 */
@@ -4731,6 +4824,56 @@ export class TransactionWitnessSet {
 * @returns {TransactionWitnessSet}
 */
   static new(): TransactionWitnessSet;
+}
+/**
+* Builder de-duplicates witnesses as they are added 
+*/
+export class TransactionWitnessSetBuilder {
+  free(): void;
+/**
+* @param {Vkeywitness} vkey
+*/
+  add_vkey(vkey: Vkeywitness): void;
+/**
+* @param {BootstrapWitness} bootstrap
+*/
+  add_bootstrap(bootstrap: BootstrapWitness): void;
+/**
+* @param {NativeScript} native_script
+*/
+  add_native_script(native_script: NativeScript): void;
+/**
+* @param {PlutusScript} plutus_script
+*/
+  add_plutus_script(plutus_script: PlutusScript): void;
+/**
+* @param {PlutusData} plutus_datum
+*/
+  add_plutus_datum(plutus_datum: PlutusData): void;
+/**
+* @param {Redeemer} redeemer
+*/
+  add_redeemer(redeemer: Redeemer): void;
+/**
+* @param {RequiredSignatureSet} required_sigs
+*/
+  set_required_sigs(required_sigs: RequiredSignatureSet): void;
+/**
+* @returns {RequiredSignatureSet}
+*/
+  get_required_sigs(): RequiredSignatureSet;
+/**
+* @returns {TransactionWitnessSetBuilder}
+*/
+  static new(): TransactionWitnessSetBuilder;
+/**
+* @param {TransactionWitnessSet} wit_set
+*/
+  add_existing(wit_set: TransactionWitnessSet): void;
+/**
+* @returns {TransactionWitnessSet}
+*/
+  build(): TransactionWitnessSet;
 }
 /**
 */
