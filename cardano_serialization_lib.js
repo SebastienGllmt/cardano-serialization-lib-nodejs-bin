@@ -8528,10 +8528,10 @@ class Relays {
 module.exports.Relays = Relays;
 /**
 */
-class RequiredSignatureSet {
+class RequiredWitnessSet {
 
     static __wrap(ptr) {
-        const obj = Object.create(RequiredSignatureSet.prototype);
+        const obj = Object.create(RequiredWitnessSet.prototype);
         obj.ptr = ptr;
 
         return obj;
@@ -8546,108 +8546,108 @@ class RequiredSignatureSet {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_requiredsignatureset_free(ptr);
+        wasm.__wbg_requiredwitnessset_free(ptr);
     }
     /**
     * @param {Vkeywitness} vkey
     */
     add_vkey(vkey) {
         _assertClass(vkey, Vkeywitness);
-        wasm.requiredsignatureset_add_vkey(this.ptr, vkey.ptr);
+        wasm.requiredwitnessset_add_vkey(this.ptr, vkey.ptr);
     }
     /**
     * @param {Vkey} vkey
     */
     add_vkey_key(vkey) {
         _assertClass(vkey, Vkey);
-        wasm.requiredsignatureset_add_vkey_key(this.ptr, vkey.ptr);
+        wasm.requiredwitnessset_add_vkey_key(this.ptr, vkey.ptr);
     }
     /**
     * @param {BootstrapWitness} bootstrap
     */
     add_bootstrap(bootstrap) {
         _assertClass(bootstrap, BootstrapWitness);
-        wasm.requiredsignatureset_add_bootstrap(this.ptr, bootstrap.ptr);
+        wasm.requiredwitnessset_add_bootstrap(this.ptr, bootstrap.ptr);
     }
     /**
     * @param {Vkey} bootstrap
     */
     add_bootstrap_key(bootstrap) {
         _assertClass(bootstrap, Vkey);
-        wasm.requiredsignatureset_add_bootstrap_key(this.ptr, bootstrap.ptr);
+        wasm.requiredwitnessset_add_bootstrap_key(this.ptr, bootstrap.ptr);
     }
     /**
     * @param {NativeScript} native_script
     */
     add_native_script(native_script) {
         _assertClass(native_script, NativeScript);
-        wasm.requiredsignatureset_add_native_script(this.ptr, native_script.ptr);
+        wasm.requiredwitnessset_add_native_script(this.ptr, native_script.ptr);
     }
     /**
     * @param {ScriptHash} native_script
     */
     add_native_script_hash(native_script) {
         _assertClass(native_script, ScriptHash);
-        wasm.requiredsignatureset_add_native_script_hash(this.ptr, native_script.ptr);
+        wasm.requiredwitnessset_add_native_script_hash(this.ptr, native_script.ptr);
     }
     /**
     * @param {PlutusScript} plutus_script
     */
     add_plutus_script(plutus_script) {
         _assertClass(plutus_script, PlutusScript);
-        wasm.requiredsignatureset_add_plutus_script(this.ptr, plutus_script.ptr);
+        wasm.requiredwitnessset_add_plutus_script(this.ptr, plutus_script.ptr);
     }
     /**
     * @param {ScriptHash} plutus_script
     */
     add_plutus_hash(plutus_script) {
         _assertClass(plutus_script, ScriptHash);
-        wasm.requiredsignatureset_add_plutus_hash(this.ptr, plutus_script.ptr);
+        wasm.requiredwitnessset_add_plutus_hash(this.ptr, plutus_script.ptr);
     }
     /**
     * @param {PlutusData} plutus_datum
     */
     add_plutus_datum(plutus_datum) {
         _assertClass(plutus_datum, PlutusData);
-        wasm.requiredsignatureset_add_plutus_datum(this.ptr, plutus_datum.ptr);
+        wasm.requiredwitnessset_add_plutus_datum(this.ptr, plutus_datum.ptr);
     }
     /**
     * @param {DataHash} plutus_datum
     */
     add_plutus_datum_hash(plutus_datum) {
         _assertClass(plutus_datum, DataHash);
-        wasm.requiredsignatureset_add_plutus_datum_hash(this.ptr, plutus_datum.ptr);
+        wasm.requiredwitnessset_add_plutus_datum_hash(this.ptr, plutus_datum.ptr);
     }
     /**
     * @param {Redeemer} redeemer
     */
     add_redeemer(redeemer) {
         _assertClass(redeemer, Redeemer);
-        wasm.requiredsignatureset_add_redeemer(this.ptr, redeemer.ptr);
+        wasm.requiredwitnessset_add_redeemer(this.ptr, redeemer.ptr);
     }
     /**
     * @param {RedeemerWitnessKey} redeemer
     */
     add_redeemer_tag(redeemer) {
         _assertClass(redeemer, RedeemerWitnessKey);
-        wasm.requiredsignatureset_add_redeemer_tag(this.ptr, redeemer.ptr);
+        wasm.requiredwitnessset_add_redeemer_tag(this.ptr, redeemer.ptr);
     }
     /**
-    * @param {RequiredSignatureSet} requirements
+    * @param {RequiredWitnessSet} requirements
     */
     add_all(requirements) {
-        _assertClass(requirements, RequiredSignatureSet);
-        wasm.requiredsignatureset_add_all(this.ptr, requirements.ptr);
+        _assertClass(requirements, RequiredWitnessSet);
+        wasm.requiredwitnessset_add_all(this.ptr, requirements.ptr);
     }
     /**
-    * @returns {RequiredSignatureSet}
+    * @returns {RequiredWitnessSet}
     */
     static new() {
-        var ret = wasm.requiredsignatureset_new();
-        return RequiredSignatureSet.__wrap(ret);
+        var ret = wasm.requiredwitnessset_new();
+        return RequiredWitnessSet.__wrap(ret);
     }
 }
-module.exports.RequiredSignatureSet = RequiredSignatureSet;
+module.exports.RequiredWitnessSet = RequiredWitnessSet;
 /**
 */
 class RewardAddress {
@@ -11989,18 +11989,11 @@ class TransactionWitnessSetBuilder {
         wasm.transactionwitnesssetbuilder_add_redeemer(this.ptr, redeemer.ptr);
     }
     /**
-    * @param {RequiredSignatureSet} required_sigs
+    * @param {RequiredWitnessSet} required_wits
     */
-    set_required_sigs(required_sigs) {
-        _assertClass(required_sigs, RequiredSignatureSet);
-        wasm.transactionwitnesssetbuilder_set_required_sigs(this.ptr, required_sigs.ptr);
-    }
-    /**
-    * @returns {RequiredSignatureSet}
-    */
-    get_required_sigs() {
-        var ret = wasm.transactionwitnesssetbuilder_get_required_sigs(this.ptr);
-        return RequiredSignatureSet.__wrap(ret);
+    add_required_wits(required_wits) {
+        _assertClass(required_wits, RequiredWitnessSet);
+        wasm.transactionwitnesssetbuilder_add_required_wits(this.ptr, required_wits.ptr);
     }
     /**
     * @returns {TransactionWitnessSetBuilder}

@@ -3401,7 +3401,7 @@ export class Relays {
 }
 /**
 */
-export class RequiredSignatureSet {
+export class RequiredWitnessSet {
   free(): void;
 /**
 * @param {Vkeywitness} vkey
@@ -3452,13 +3452,13 @@ export class RequiredSignatureSet {
 */
   add_redeemer_tag(redeemer: RedeemerWitnessKey): void;
 /**
-* @param {RequiredSignatureSet} requirements
+* @param {RequiredWitnessSet} requirements
 */
-  add_all(requirements: RequiredSignatureSet): void;
+  add_all(requirements: RequiredWitnessSet): void;
 /**
-* @returns {RequiredSignatureSet}
+* @returns {RequiredWitnessSet}
 */
-  static new(): RequiredSignatureSet;
+  static new(): RequiredWitnessSet;
 }
 /**
 */
@@ -4855,13 +4855,9 @@ export class TransactionWitnessSetBuilder {
 */
   add_redeemer(redeemer: Redeemer): void;
 /**
-* @param {RequiredSignatureSet} required_sigs
+* @param {RequiredWitnessSet} required_wits
 */
-  set_required_sigs(required_sigs: RequiredSignatureSet): void;
-/**
-* @returns {RequiredSignatureSet}
-*/
-  get_required_sigs(): RequiredSignatureSet;
+  add_required_wits(required_wits: RequiredWitnessSet): void;
 /**
 * @returns {TransactionWitnessSetBuilder}
 */
