@@ -255,14 +255,6 @@ declare export var NetworkIdKind: {|
 |};
 
 /**
- */
-
-declare export var CoinSelectionStrategyCIP2: {|
-  +LargestFirst: 0, // 0
-  +RandomImprove: 1, // 1
-|};
-
-/**
  * Each new language uses a different namespace for hashing its script
  * This is because you could have a language where the same bytes have different semantics
  * So this avoids scripts in different languages mapping to the same hash
@@ -340,6 +332,14 @@ declare export var RedeemerTagKind: {|
   +Mint: 1, // 1
   +Cert: 2, // 2
   +Reward: 3, // 3
+|};
+
+/**
+ */
+
+declare export var CoinSelectionStrategyCIP2: {|
+  +LargestFirst: 0, // 0
+  +RandomImprove: 1, // 1
 |};
 
 /**
@@ -4197,6 +4197,11 @@ declare export class RequiredWitnessSet {
   add_vkey_key(vkey: Vkey): void;
 
   /**
+   * @param {Ed25519KeyHash} hash
+   */
+  add_vkey_key_hash(hash: Ed25519KeyHash): void;
+
+  /**
    * @param {BootstrapWitness} bootstrap
    */
   add_bootstrap(bootstrap: BootstrapWitness): void;
@@ -4205,6 +4210,11 @@ declare export class RequiredWitnessSet {
    * @param {Vkey} bootstrap
    */
   add_bootstrap_key(bootstrap: Vkey): void;
+
+  /**
+   * @param {Ed25519KeyHash} hash
+   */
+  add_bootstrap_key_hash(hash: Ed25519KeyHash): void;
 
   /**
    * @param {NativeScript} native_script

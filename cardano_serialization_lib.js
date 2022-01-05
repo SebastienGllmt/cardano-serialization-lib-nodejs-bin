@@ -1,7 +1,7 @@
 let imports = {};
 imports['__wbindgen_placeholder__'] = module.exports;
 let wasm;
-const { TextDecoder, TextEncoder } = require(String.raw`util`);
+const { TextDecoder, TextEncoder } = require(`util`);
 
 const heap = new Array(32).fill(undefined);
 
@@ -518,9 +518,6 @@ module.exports.NativeScriptKind = Object.freeze({ ScriptPubkey:0,"0":"ScriptPubk
 */
 module.exports.NetworkIdKind = Object.freeze({ Testnet:0,"0":"Testnet",Mainnet:1,"1":"Mainnet", });
 /**
-*/
-module.exports.CoinSelectionStrategyCIP2 = Object.freeze({ LargestFirst:0,"0":"LargestFirst",RandomImprove:1,"1":"RandomImprove", });
-/**
 * Each new language uses a different namespace for hashing its script
 * This is because you could have a language where the same bytes have different semantics
 * So this avoids scripts in different languages mapping to the same hash
@@ -550,6 +547,9 @@ module.exports.PlutusDataKind = Object.freeze({ ConstrPlutusData:0,"0":"ConstrPl
 /**
 */
 module.exports.RedeemerTagKind = Object.freeze({ Spend:0,"0":"Spend",Mint:1,"1":"Mint",Cert:2,"2":"Cert",Reward:3,"3":"Reward", });
+/**
+*/
+module.exports.CoinSelectionStrategyCIP2 = Object.freeze({ LargestFirst:0,"0":"LargestFirst",RandomImprove:1,"1":"RandomImprove", });
 /**
 */
 class Address {
@@ -8563,6 +8563,13 @@ class RequiredWitnessSet {
         wasm.requiredwitnessset_add_vkey_key(this.ptr, vkey.ptr);
     }
     /**
+    * @param {Ed25519KeyHash} hash
+    */
+    add_vkey_key_hash(hash) {
+        _assertClass(hash, Ed25519KeyHash);
+        wasm.requiredwitnessset_add_vkey_key_hash(this.ptr, hash.ptr);
+    }
+    /**
     * @param {BootstrapWitness} bootstrap
     */
     add_bootstrap(bootstrap) {
@@ -8575,6 +8582,13 @@ class RequiredWitnessSet {
     add_bootstrap_key(bootstrap) {
         _assertClass(bootstrap, Vkey);
         wasm.requiredwitnessset_add_bootstrap_key(this.ptr, bootstrap.ptr);
+    }
+    /**
+    * @param {Ed25519KeyHash} hash
+    */
+    add_bootstrap_key_hash(hash) {
+        _assertClass(hash, Ed25519KeyHash);
+        wasm.requiredwitnessset_add_bootstrap_key_hash(this.ptr, hash.ptr);
     }
     /**
     * @param {NativeScript} native_script
@@ -13067,6 +13081,15 @@ module.exports.__wbindgen_string_new = function(arg0, arg1) {
     return addHeapObject(ret);
 };
 
+module.exports.__wbindgen_string_get = function(arg0, arg1) {
+    const obj = getObject(arg1);
+    var ret = typeof(obj) === 'string' ? obj : undefined;
+    var ptr0 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    getInt32Memory0()[arg0 / 4 + 1] = len0;
+    getInt32Memory0()[arg0 / 4 + 0] = ptr0;
+};
+
 module.exports.__wbg_getRandomValues_98117e9a7e993920 = function() { return handleError(function (arg0, arg1) {
     getObject(arg0).getRandomValues(getObject(arg1));
 }, arguments) };
@@ -13094,6 +13117,11 @@ module.exports.__wbg_versions_6164651e75405d4a = function(arg0) {
 module.exports.__wbg_node_4b517d861cbcb3bc = function(arg0) {
     var ret = getObject(arg0).node;
     return addHeapObject(ret);
+};
+
+module.exports.__wbindgen_is_string = function(arg0) {
+    var ret = typeof(getObject(arg0)) === 'string';
+    return ret;
 };
 
 module.exports.__wbg_crypto_98fc271021c7d2ad = function(arg0) {
@@ -13221,20 +13249,6 @@ module.exports.__wbg_randomFillSync_1b52c8482374c55b = function(arg0, arg1, arg2
 
 module.exports.__wbg_getRandomValues_1ef11e888e5228e9 = function(arg0, arg1, arg2) {
     getObject(arg0).getRandomValues(getArrayU8FromWasm0(arg1, arg2));
-};
-
-module.exports.__wbindgen_is_string = function(arg0) {
-    var ret = typeof(getObject(arg0)) === 'string';
-    return ret;
-};
-
-module.exports.__wbindgen_string_get = function(arg0, arg1) {
-    const obj = getObject(arg1);
-    var ret = typeof(obj) === 'string' ? obj : undefined;
-    var ptr0 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    getInt32Memory0()[arg0 / 4 + 1] = len0;
-    getInt32Memory0()[arg0 / 4 + 0] = ptr0;
 };
 
 module.exports.__wbindgen_debug_string = function(arg0, arg1) {

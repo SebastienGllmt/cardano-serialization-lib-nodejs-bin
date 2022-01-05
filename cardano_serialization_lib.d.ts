@@ -167,12 +167,6 @@ export enum NetworkIdKind {
   Mainnet,
 }
 /**
-*/
-export enum CoinSelectionStrategyCIP2 {
-  LargestFirst,
-  RandomImprove,
-}
-/**
 * Each new language uses a different namespace for hashing its script
 * This is because you could have a language where the same bytes have different semantics
 * So this avoids scripts in different languages mapping to the same hash
@@ -235,6 +229,12 @@ export enum RedeemerTagKind {
   Mint,
   Cert,
   Reward,
+}
+/**
+*/
+export enum CoinSelectionStrategyCIP2 {
+  LargestFirst,
+  RandomImprove,
 }
 /**
 */
@@ -3412,6 +3412,10 @@ export class RequiredWitnessSet {
 */
   add_vkey_key(vkey: Vkey): void;
 /**
+* @param {Ed25519KeyHash} hash
+*/
+  add_vkey_key_hash(hash: Ed25519KeyHash): void;
+/**
 * @param {BootstrapWitness} bootstrap
 */
   add_bootstrap(bootstrap: BootstrapWitness): void;
@@ -3419,6 +3423,10 @@ export class RequiredWitnessSet {
 * @param {Vkey} bootstrap
 */
   add_bootstrap_key(bootstrap: Vkey): void;
+/**
+* @param {Ed25519KeyHash} hash
+*/
+  add_bootstrap_key_hash(hash: Ed25519KeyHash): void;
 /**
 * @param {NativeScript} native_script
 */
